@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, Any
 from functools import wraps
 
 cache_dict = {}
@@ -6,7 +6,7 @@ cache_dict = {}
 
 def cache(func: Callable) -> Callable:
     @wraps(func)
-    def wrapper(*args, **kwargs) -> None:
+    def wrapper(*args, **kwargs) -> Any:
         curr_dict = {}
         if cache_dict.get(func.__name__, None) is None:
             cache_dict[func.__name__] = {}
