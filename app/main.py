@@ -10,10 +10,10 @@ def cache(func: Callable) -> Callable:
         if cache_dict.get(func.__name__, None) is None:
             cache_dict[func.__name__] = {}
         curr_dict = cache_dict[func.__name__]
-        if curr_dict.get(tuple(args) + tuple(kwargs), None) is None:
+        if curr_dict.get(tuple(args) + tuple(kwargs.items()), None) is None:
             print("Calculating new result")
-            curr_dict[tuple(args) + tuple(kwargs)] = func(*args, **kwargs)
+            curr_dict[tuple(args) + tuple(kwargs.items())] = func(*args, **kwargs)
         else:
             print("Getting from cache")
-        return curr_dict[tuple(args) + tuple(kwargs)]
+        return curr_dict[tuple(args) + tuple(kwargs.items())]
     return wrapper
