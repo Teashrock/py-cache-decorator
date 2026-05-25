@@ -7,14 +7,36 @@ cache_dict = {}
 def cache(func: Callable) -> Callable:
     @wraps(func)
     def wrapper(*args, **kwargs) -> Any:
-        if cache_dict.get(func.__name__, None) is None:
-            cache_dict[func.__name__] = {}
-        curr_dict = cache_dict[func.__name__]
-        if curr_dict.get(tuple(args) + tuple(kwargs.items()), None) is None:
+        key = func.__name__, args, tuple(sorted(kwargs.items()))
+        if key not in cache_dict:
             print("Calculating new result")
-            curr_dict[tuple(args) + tuple(kwargs.items())] = \
-                func(*args, **kwargs)
+            cache_dict[key] = func(*args, **kwargs)
         else:
             print("Getting from cache")
-        return curr_dict[tuple(args) + tuple(kwargs.items())]
+
+        return cache_dict[key]
     return wrapper
+    
+# @cache
+# def long_time_func(a, b, c):
+#     return (a ** b ** c) % (a * c)
+
+# @cache
+# def long_time_func_2(text_1, text_2):
+#     return f"{text_1.upper()}, {text_2.lower()}"
+
+# @cache
+# def long_time_func_3(n_list, text):
+#     return f"{[i ** 2 for i in n_list]}, {text}"
+
+# long_time_func(1, 2, 3)
+# long_time_func(1, 2, 3)
+# long_time_func(1, 2, 3)
+# long_time_func_3((10, 20, 30), "wow, numbers!")
+# long_time_func(2, 2, 3)
+# long_time_func_2("Hello", "world")
+# long_time_func(1, 2, 3)
+# long_time_func_2("Hello", "Mark")
+# long_time_func_2("Hello", "Mark")
+# long_time_func_3((10, 20, 30), "wow, numbers!")
+# long_time_func_3((10, 20, 30), "egh, numbers...")
